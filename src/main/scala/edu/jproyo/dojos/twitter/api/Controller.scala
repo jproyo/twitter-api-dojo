@@ -1,7 +1,11 @@
 package edu.jproyo.dojos.twitter.api
 
+import scala.language.postfixOps
+import scala.concurrent.duration._
+
 import akka.actor._
 import akka.pattern.ask
+import akka.util.Timeout
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes}
@@ -11,9 +15,12 @@ import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 
 import io.circe.syntax._
 
+import edu.jproyo.dojos.twitter.api.config._
+
 trait MainController extends Directives with FailFastCirceSupport with CustomMessageJsonCodec{
 
-  val serviceProxyApi: ActorRef
+  // val serviceProxyApi: ActorRef
+  implicit val timeout: Timeout = Timeout(Configuration.config.serviceTimeout)
 
   val mainRoute =
     pathPrefix("twitter" / "api"){
@@ -25,7 +32,8 @@ trait MainController extends Directives with FailFastCirceSupport with CustomMes
       path(Segment / "tweets"){ username =>
         get {
           complete {
-            200 -> (serviceProxyApi ? username).mapTo[TweetsResult]
+            // 200 -> (serviceProxyApi ? username).mapTo[TweetsResult]
+            200 -> username
           }
         }
       } ~

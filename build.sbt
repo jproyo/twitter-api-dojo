@@ -26,7 +26,8 @@ lazy val akka = Seq(
 lazy val others = Seq(
 	"org.scala-lang.modules" %% "scala-xml" % "1.0.6",
   "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "com.github.kxbmap" %% "configs" % "0.4.4"
 )
 
 lazy val testing = Seq(
@@ -46,10 +47,11 @@ lazy val root = (project in file("."))
   .configs(IntegrationTest)
   .settings(commonSettings: _*)
   .settings(dependencies: _*)
-  .settings(Defaults.itSettings)
+  .settings(Defaults.itSettings: _*)
   .settings(
   	mainClass in Compile := Some(mainClassName)
   )
+
   packAutoSettings ++ Seq(
     packMain := Map(projectName -> mainClassName),
     packJvmOpts := Map(projectName -> Seq("-Xmx2048m")),

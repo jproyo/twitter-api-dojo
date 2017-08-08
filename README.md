@@ -43,7 +43,7 @@ In order to run this solution you are going to need the following distributions 
 #### Run tests
 
 ```shell
-bash.$ sbt test
+bash.$ sbt it:test test
 ```
 
 #### Startup Application with SBT
@@ -74,7 +74,7 @@ Docker 17.06+
 
 ```shell
 bash.$ docker build --name twitter-api .
-bash.$ docker run twitter-api sbt test
+bash.$ docker run twitter-api sbt it:test test
 ```
 
 #### Run Solution
