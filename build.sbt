@@ -1,5 +1,7 @@
 val projectName = "twitter-api"
 
+resolvers += Resolver.sonatypeRepo("releases")
+
 lazy val commonSettings = Seq(
   organization := "edu.jproyo.dojos",
   name := projectName,
@@ -23,6 +25,12 @@ lazy val akka = Seq(
   "de.heikoseeberger" %% "akka-http-circe" % "1.16.0"
 )
 
+val twitterVersion = "5.1"
+
+lazy val twitter = Seq(
+  "com.danielasfregola" %% "twitter4s" % twitterVersion
+)
+
 lazy val others = Seq(
 	"org.scala-lang.modules" %% "scala-xml" % "1.0.6",
   "ch.qos.logback" % "logback-classic" % "1.1.7",
@@ -36,7 +44,7 @@ lazy val testing = Seq(
 )
 
 lazy val dependencies = Seq(
-	libraryDependencies ++= akka ++ circle ++ others ++ testing
+	libraryDependencies ++= akka ++ circle ++ twitter ++ others ++ testing
 )
 
 scalacOptions += "-feature"
