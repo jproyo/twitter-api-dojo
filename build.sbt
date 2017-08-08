@@ -39,7 +39,6 @@ lazy val dependencies = Seq(
 
 scalacOptions += "-feature"
 
-
 lazy val mainClassName = "edu.jproyo.dojos.twitter.api.WebApp"
 
 lazy val root = (project in file("."))

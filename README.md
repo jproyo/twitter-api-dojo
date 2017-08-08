@@ -19,35 +19,58 @@ We need a small REST API with just one endpoint that, given a Twitter username, 
 - Usage of design patterns.
 - Show off!
 
-## Prerequisites
+
+## Run Solution
+
+### Without Docker
+
+#### Prerequisites
 
 In order to run this solution you are going to need the following distributions installed.
 
 - SBT 0.13.15+
 - Scala 2.12.2+
 
-## Run this solution
-
-### Run tests
+#### Run tests
 
 ```shell
 bash.$ sbt test
 ```
 
-### Startup Application with SBT
+#### Startup Application with SBT
 
 ```shell
 bash.$ sbt run
 ```
 
-### Package Executable JAR
+#### Package Executable JAR
 
 ```shell
 bash.$ sbt pack
 ```
 
-#### Execute JAR
+##### Execute JAR
 
 ```shell
 bash.$ ./target/pack/bin/twitter-api
+```
+
+### With Docker
+
+#### Prerequisites
+
+Docker 17.06+
+
+#### Run Test
+
+```shell
+bash.$ docker build --name twitter-api .
+bash.$ docker run twitter-api sbt test
+```
+
+#### Run Solution
+
+```shell
+bash.$ docker build --name twitter-api .
+bash.$ docker run -p8080:8080 twitter-api
 ```
