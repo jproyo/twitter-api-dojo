@@ -21,7 +21,7 @@ import com.danielasfregola.twitter4s.exceptions.TwitterException
 
 import edu.jproyo.dojos.twitter.api.config._
 
-trait MainController extends Directives with FailFastCirceSupport with TwitterResultJsonCodec{
+trait MainController extends Directives with FailFastCirceSupport with TwitterResultJsonCodec with TwitterExceptionJsonCodec{
 
   val logger = Logger[MainController]
 
@@ -33,7 +33,7 @@ trait MainController extends Directives with FailFastCirceSupport with TwitterRe
     case e: TwitterException =>
       extractUri { uri =>
         logger.error(s"Request to $uri could not be handled normally")
-        complete(HttpResponse(NotFound, entity = s"Tweets not found for $uri"))
+        complete(HttpResponse(e.code, entity = HttpEntity(ContentTypes.`application/json`, e.errors.asJson.toString)))
       }
     case _: Exception =>
       extractUri { uri =>

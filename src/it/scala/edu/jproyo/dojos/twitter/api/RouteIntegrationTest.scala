@@ -3,15 +3,18 @@ package edu.jproyo.dojos.twitter.api
 import org.scalatest.{ Matchers, WordSpec, BeforeAndAfterAll }
 import akka.actor.{ActorSystem, Actor, Props}
 import akka.testkit.{ ImplicitSender, TestActors, TestKit }
-import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.model._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes, HttpMethods}
+import StatusCodes._
 import Directives._
+
+import com.danielasfregola.twitter4s.exceptions._
 
 import edu.jproyo.dojos.twitter.api.config._
 
-class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfterAll with MainController{
+class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfterAll with MainController {
 
   override def afterAll {
     TestKit.shutdownActorSystem(system)
@@ -19,7 +22,8 @@ class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTes
 
   class TwitterProxyApiMock extends Actor {
     def receive = {
-      case msg: String => sender ! TweetsResult(msg, List("one"))
+      case msg: String if msg.endsWith("invalid") => sender ! akka.actor.Status.Failure(new TwitterException(NotFound, Errors(TwitterError("not found", 404))))
+      case msg: String if msg.endsWith("valid") => sender ! akka.actor.Status.Success(TweetsResult(msg, List("one")))
       case _           => None
     }
   }
@@ -55,9 +59,16 @@ class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTes
     }
 
     "response username TweetsResult on /twitter/api/{username}/tweets" in {
-      Get("/twitter/api/someuser/tweets") ~> mainRoute ~> check {
+      Get("/twitter/api/someuservalid/tweets") ~> mainRoute ~> check {
         status shouldEqual StatusCodes.OK
-        entityAs[TweetsResult] shouldEqual TweetsResult("someuser", List("one"))
+        entityAs[TweetsResult] shouldEqual TweetsResult("someuservalid", List("one"))
+      }
+    }
+
+    "response TwitterExeption on /twitter/api/{invalidusername}/tweets" in {
+      Get("/twitter/api/someuserinvalid/tweets") ~> mainRoute ~> check {
+        status shouldEqual StatusCodes.NotFound
+        entityAs[Errors] shouldEqual Errors(TwitterError("not found", 404))
       }
     }
 

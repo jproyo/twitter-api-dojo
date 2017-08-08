@@ -12,3 +12,8 @@ trait TwitterResultJsonCodec {
   implicit val messageDecoder: Decoder[TweetsResult] = deriveDecoder
   implicit val messageEncoder: Encoder[TweetsResult] = deriveEncoder
 }
+
+trait TwitterExceptionJsonCodec {
+  implicit val exceptionEncoder: Encoder[com.danielasfregola.twitter4s.exceptions.Errors] = deriveEncoder
+  implicit val exceptionDecoder: Decoder[com.danielasfregola.twitter4s.exceptions.Errors] = deriveDecoder
+}
