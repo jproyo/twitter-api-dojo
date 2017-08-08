@@ -4,15 +4,16 @@ import scala.language.postfixOps
 import scala.concurrent.duration._
 
 import com.typesafe.config.ConfigFactory
+import com.typesafe.config.Config
 import configs.Configs
 import configs.syntax._
 
+case class TwitterApiConfig(serviceTimeout: FiniteDuration = 5 seconds)
+
 object Configuration {
 
-  private lazy val _config = ConfigFactory.load()
-
-  def config = _config.getOrElse[TwitterApiConfig]("twitter-app", TwitterApiConfig(5 seconds)).value
+  def apply(configStr: Option[String] = None): TwitterApiConfig = {
+    configStr.fold(ConfigFactory.load())(ConfigFactory.parseString(_)).getOrElse[TwitterApiConfig]("twitter-app", TwitterApiConfig()).value
+  }
 
 }
-
-case class TwitterApiConfig(serviceTimeout: FiniteDuration)

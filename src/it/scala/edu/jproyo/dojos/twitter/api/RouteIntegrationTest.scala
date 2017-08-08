@@ -1,13 +1,30 @@
 package edu.jproyo.dojos.twitter.api
 
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{ Matchers, WordSpec, BeforeAndAfterAll }
+import akka.actor.{ActorSystem, Actor, Props}
+import akka.testkit.{ ImplicitSender, TestActors, TestKit }
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes, HttpMethods}
 import Directives._
 
-class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTest with MainController{
+import edu.jproyo.dojos.twitter.api.config._
+
+class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfterAll with MainController{
+
+  override def afterAll {
+    TestKit.shutdownActorSystem(system)
+  }
+
+  class TwitterProxyApiMock extends Actor {
+    def receive = {
+      case msg: String => sender ! TweetsResult(msg, List("one"))
+      case _           => None
+    }
+  }
+
+  val serviceProxyApi = system.actorOf(Props(new TwitterProxyApiMock))
 
   "API Endpoin" should {
 
@@ -37,10 +54,10 @@ class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTes
       }
     }
 
-    "response username mirror on /twitter/api/{username}/tweets" in {
+    "response username TweetsResult on /twitter/api/{username}/tweets" in {
       Get("/twitter/api/someuser/tweets") ~> mainRoute ~> check {
         status shouldEqual StatusCodes.OK
-        entityAs[String] shouldEqual "someuser"
+        entityAs[TweetsResult] shouldEqual TweetsResult("someuser", List("one"))
       }
     }
 

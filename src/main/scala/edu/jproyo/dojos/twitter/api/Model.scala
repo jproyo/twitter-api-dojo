@@ -6,9 +6,9 @@ import io.circe.generic.semiauto._
 import io.circe.parser._
 import io.circe.syntax._
 
-case class CustomMessage(val key: Option[String], val delay: Option[Int], val content: String)
+case class TweetsResult(val username: String, val tweets: List[String])
 
-trait CustomMessageJsonCodec {
-  implicit val messageDecoder: Decoder[CustomMessage] = deriveDecoder
-  implicit val messageEncoder: Encoder[CustomMessage] = deriveEncoder
+trait TwitterResultJsonCodec {
+  implicit val messageDecoder: Decoder[TweetsResult] = deriveDecoder
+  implicit val messageEncoder: Encoder[TweetsResult] = deriveEncoder
 }

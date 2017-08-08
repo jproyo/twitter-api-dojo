@@ -17,10 +17,11 @@ import io.circe.syntax._
 
 import edu.jproyo.dojos.twitter.api.config._
 
-trait MainController extends Directives with FailFastCirceSupport with CustomMessageJsonCodec{
+trait MainController extends Directives with FailFastCirceSupport with TwitterResultJsonCodec{
 
-  // val serviceProxyApi: ActorRef
-  implicit val timeout: Timeout = Timeout(Configuration.config.serviceTimeout)
+  val serviceProxyApi: ActorRef
+
+  implicit val timeout: Timeout = Timeout(Configuration().serviceTimeout)
 
   val mainRoute =
     pathPrefix("twitter" / "api"){
@@ -32,8 +33,7 @@ trait MainController extends Directives with FailFastCirceSupport with CustomMes
       path(Segment / "tweets"){ username =>
         get {
           complete {
-            // 200 -> (serviceProxyApi ? username).mapTo[TweetsResult]
-            200 -> username
+            200 -> (serviceProxyApi ? username).mapTo[TweetsResult]
           }
         }
       } ~

@@ -15,13 +15,13 @@ import com.typesafe.scalalogging.Logger
 import io.circe.syntax._
 import io.circe.parser.decode
 
-object WebApp extends MainController with CustomMessageJsonCodec{
+object WebApp extends MainController with TwitterResultJsonCodec{
 
   val logger = Logger(this.getClass.getPackage.getName)
 
   implicit val system = ActorSystem("twitter-api-system")
 
-  // val producerActor = system.actorOf(RoundRobinPool(10).props(Props[Producer]), name = "someProducer")
+  val serviceProxyApi = system.actorOf(RoundRobinPool(10).props(Props[TwitterActorService]), name = "twitter-proxy-service")
 
   def main(args: Array[String]) {
 
