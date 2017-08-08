@@ -46,6 +46,12 @@ In order to run this solution you are going to need the following distributions 
 bash.$ sbt it:test test
 ```
 
+#### Run Coverage Report
+
+```shell
+bash.$ sbt clean coverage it:test test coverageReport
+```
+
 #### Startup Application with SBT
 
 ```shell
@@ -73,13 +79,20 @@ Docker 17.06+
 #### Run Test
 
 ```shell
-bash.$ docker build --name twitter-api .
+bash.$ docker build -t twitter-api .
 bash.$ docker run twitter-api sbt it:test test
 ```
 
 #### Run Solution
 
 ```shell
-bash.$ docker build --name twitter-api .
+bash.$ docker build -t twitter-api .
 bash.$ docker run -p8080:8080 twitter-api
+```
+
+#### Run Coverage Report
+
+```shell
+bash.$ docker build -t twitter-api .
+bash.$ docker run -p8080:8080 twitter-api sbt clean coverage it:test test coverageReport
 ```

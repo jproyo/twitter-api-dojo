@@ -50,6 +50,7 @@ lazy val dependencies = Seq(
 )
 
 scalacOptions += "-feature"
+coverageEnabled := true
 
 lazy val mainClassName = "edu.jproyo.dojos.twitter.api.WebApp"
 

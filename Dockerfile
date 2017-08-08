@@ -9,4 +9,4 @@ RUN sbt pack
 
 EXPOSE 8080
 
-CMD ["./target/pack/bin/twitter-api"]
+CMD ["/opt/twitter-api/target/pack/bin/twitter-api"]
