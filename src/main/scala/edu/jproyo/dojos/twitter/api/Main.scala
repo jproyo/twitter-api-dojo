@@ -1,6 +1,8 @@
 package edu.jproyo.dojos.twitter.api
 
-import scala.io.StdIn
+import scala.language.postfixOps
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import akka.actor._
@@ -30,12 +32,11 @@ object WebApp extends MainController with TwitterResultJsonCodec{
     val srvAddrr = "0.0.0.0"
     val bindingFuture = Http().bindAndHandle(mainRoute, s"$srvAddrr", 8080)
     logger.info(s"Server online at http://$srvAddrr:8080/\nPress Ctrl+D to stop...")
-    while(StdIn.readLine() != null){}
-    bindingFuture
-      .flatMap(_.unbind())
-      .onComplete(_ => {
-        system.terminate()
-        System.exit(0)
-      })
+    scala.sys.addShutdownHook {
+      logger.info("Finishing Actor System")
+      system.terminate()
+      Await.result(system.whenTerminated, 30 seconds)
+      logger.info("Actor System Finished")
+    }
   }
 }
