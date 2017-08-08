@@ -16,10 +16,10 @@ lazy val circle = Seq(
 ).map(_ % circeVersion)
 
 lazy val akka = Seq(
-	"com.typesafe.akka" %% "akka-actor" % "2.5.1",
-  "com.typesafe.akka" %% "akka-cluster" % "2.5.1",
-  "com.typesafe.akka" %% "akka-http" % "10.0.6",
-  "com.typesafe.akka" %% "akka-http-core" % "10.0.6",
+	"com.typesafe.akka" %% "akka-actor" % "2.4.19",
+  "com.typesafe.akka" %% "akka-cluster" % "2.4.19",
+  "com.typesafe.akka" %% "akka-http" % "10.0.9",
+  "com.typesafe.akka" %% "akka-http-core" % "10.0.9",
   "de.heikoseeberger" %% "akka-http-circe" % "1.16.0"
 )
 
@@ -30,7 +30,8 @@ lazy val others = Seq(
 )
 
 lazy val testing = Seq(
-  "org.scalatest" %% "scalatest" % "3.0.1" % "it,test"
+  "org.scalatest" %% "scalatest" % "3.0.1" % "it,test",
+  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.9" % "it,test"
 )
 
 lazy val dependencies = Seq(

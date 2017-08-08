@@ -19,6 +19,15 @@ We need a small REST API with just one endpoint that, given a Twitter username, 
 - Usage of design patterns.
 - Show off!
 
+## Server listening
+
+Server is listening at http://localhost:8080/twitter/api
+
+To Test this out you can try it with curl or other HTTP client
+
+```shell
+curl -v http://localhost:8080/twitter/api/ping
+```
 
 ## Run Solution
 
