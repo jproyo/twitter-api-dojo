@@ -9,20 +9,38 @@ import akka.pattern.ask
 import akka.util.Timeout
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{HttpEntity, ContentTypes}
-import akka.http.scaladsl.model.StatusCodes._
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.server._
+import StatusCodes._
+import Directives._
 
+import com.typesafe.scalalogging.Logger
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
-
 import io.circe.syntax._
+import com.danielasfregola.twitter4s.exceptions.TwitterException
 
 import edu.jproyo.dojos.twitter.api.config._
 
 trait MainController extends Directives with FailFastCirceSupport with TwitterResultJsonCodec{
 
+  val logger = Logger[MainController]
+
   val serviceProxyApi: ActorRef
 
   implicit val timeout: Timeout = Timeout(Configuration().serviceTimeout)
+
+  val twitterExceptionHandler = ExceptionHandler {
+    case e: TwitterException =>
+      extractUri { uri =>
+        logger.error(s"Request to $uri could not be handled normally")
+        complete(HttpResponse(NotFound, entity = s"Tweets not found for $uri"))
+      }
+    case _: Exception =>
+      extractUri { uri =>
+        logger.error(s"Request to $uri could not be handled normally")
+        complete(HttpResponse(InternalServerError, entity = s"Unknown error for $uri"))
+      }
+  }
 
   val mainRoute =
     pathPrefix("twitter" / "api"){
@@ -31,9 +49,11 @@ trait MainController extends Directives with FailFastCirceSupport with TwitterRe
           complete("PONG!")
         }
       } ~
-      path(Segment / "tweets"){ username =>
-        get {
-          complete { 200 -> (serviceProxyApi ? username).mapTo[TweetsResult] }
+      handleExceptions(twitterExceptionHandler) {
+        path(Segment / "tweets"){ username =>
+          get {
+            complete { 200 -> (serviceProxyApi ? username).mapTo[TweetsResult] }
+          }
         }
       } ~
       get {

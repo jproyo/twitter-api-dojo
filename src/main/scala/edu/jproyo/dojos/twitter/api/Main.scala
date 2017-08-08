@@ -17,7 +17,7 @@ import io.circe.parser.decode
 
 object WebApp extends MainController with TwitterResultJsonCodec{
 
-  val logger = Logger(this.getClass.getPackage.getName)
+  override val logger = Logger(this.getClass.getPackage.getName)
 
   implicit val system = ActorSystem("twitter-api-system")
 
