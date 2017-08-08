@@ -1,6 +1,7 @@
 package edu.jproyo.dojos.twitter.api
 
 import akka.actor._
+import akka.pattern.ask
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes}
@@ -12,7 +13,7 @@ import io.circe.syntax._
 
 trait MainController extends Directives with FailFastCirceSupport with CustomMessageJsonCodec{
 
-  // val producerActor: ActorRef
+  val serviceProxyApi: ActorRef
 
   val mainRoute =
     pathPrefix("twitter" / "api"){
@@ -23,7 +24,9 @@ trait MainController extends Directives with FailFastCirceSupport with CustomMes
       } ~
       path(Segment / "tweets"){ username =>
         get {
-          complete(200 -> username)
+          complete {
+            200 -> (serviceProxyApi ? username).mapTo[TweetsResult]
+          }
         }
       } ~
       get {
