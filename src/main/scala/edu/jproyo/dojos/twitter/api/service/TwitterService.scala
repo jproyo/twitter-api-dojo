@@ -1,22 +1,35 @@
 package edu.jproyo.dojos.twitter.api.service
 
 import scala.language.postfixOps
+import scala.concurrent.duration._
+import scala.concurrent.Future
 import scala.collection.immutable._
 
 import edu.jproyo.dojos.twitter.api.TweetsResult
+import edu.jproyo.dojos.twitter.api.adapter.Adapter
 
 trait TwitterService {
-  def tweetsFor(username: String): TweetsResult
+  val adapter: Adapter
+  def tweetsFor(username: String): Future[List[String]]
 }
 
 object TwitterService{
 
-  implicit object TwitterServiceDefault extends TwitterService {
+  implicit object TwitterServiceWithCache extends TwitterService {
 
-    def tweetsFor(username: String): TweetsResult = {
-      TweetsResult(username, (0 until 10).foldRight(List.empty[String]){ (acc, elem) => s"Message $acc" :: elem } )
+    import edu.jproyo.dojos.twitter.api.adapter.TwitterAdapter
+    import scalacache._
+    import guava._
+
+    val adapter = TwitterAdapter
+    implicit val scalaCache = ScalaCache(GuavaCache())
+
+    def tweetsFor(username: String): Future[List[String]] = {
+      cachingWithTTL(username)(30 seconds) {
+        adapter.tweetsFor(username)
+      }
     }
 
   }
-  
+
 }

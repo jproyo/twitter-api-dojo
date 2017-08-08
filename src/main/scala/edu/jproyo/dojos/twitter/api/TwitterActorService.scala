@@ -1,12 +1,13 @@
 package edu.jproyo.dojos.twitter.api
 
 import scala.language.postfixOps
-import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 import akka.actor._
 import akka.actor.Status.Failure
 import akka.pattern.ask
+import akka.pattern.pipe
 import akka.util.Timeout
 
 import com.typesafe.scalalogging.Logger
@@ -33,11 +34,8 @@ class TwitterActorService(implicit twitterService: TwitterService) extends Actor
 	def receive = {
 
 		case username: String => {
-			// val newMessage = message.copy(key = Some(UUID.randomUUID.toString))
-			// val received = (producerActor ? Message.queue(newMessage, "test-queue")).mapTo[ConfirmResponse]
-			// val result = Await.result(received, timeout.duration)
 			logger.info(s"Tweets for user $username")
-			sender ! twitterService.tweetsFor(username)
+			twitterService.tweetsFor(username).map(TweetsResult(username,_)) pipeTo sender
 		}
 
 	}

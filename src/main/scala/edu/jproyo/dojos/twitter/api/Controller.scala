@@ -1,6 +1,7 @@
 package edu.jproyo.dojos.twitter.api
 
 import scala.language.postfixOps
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 import akka.actor._
@@ -32,9 +33,7 @@ trait MainController extends Directives with FailFastCirceSupport with TwitterRe
       } ~
       path(Segment / "tweets"){ username =>
         get {
-          complete {
-            200 -> (serviceProxyApi ? username).mapTo[TweetsResult]
-          }
+          complete { 200 -> (serviceProxyApi ? username).mapTo[TweetsResult] }
         }
       } ~
       get {

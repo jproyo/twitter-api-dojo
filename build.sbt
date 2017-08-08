@@ -26,9 +26,11 @@ lazy val akka = Seq(
 )
 
 val twitterVersion = "5.1"
+val cacheVersion = "0.9.4"
 
 lazy val twitter = Seq(
-  "com.danielasfregola" %% "twitter4s" % twitterVersion
+  "com.danielasfregola" %% "twitter4s" % twitterVersion,
+  "com.github.cb372" %% "scalacache-guava" % cacheVersion
 )
 
 lazy val others = Seq(
