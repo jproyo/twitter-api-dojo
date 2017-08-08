@@ -6,11 +6,12 @@ import io.circe.generic.semiauto._
 import io.circe.parser._
 import io.circe.syntax._
 
-case class TweetsResult(val username: String, val tweets: List[String])
+case class TweetSimpl(val date: String, val text: String)
+case class TweetsResult(val username: String, val tweets: List[TweetSimpl])
 
 trait TwitterResultJsonCodec {
-  implicit val messageDecoder: Decoder[TweetsResult] = deriveDecoder
-  implicit val messageEncoder: Encoder[TweetsResult] = deriveEncoder
+  implicit val tweetResultDecoder: Decoder[TweetsResult] = deriveDecoder
+  implicit val tweetResultEncoder: Encoder[TweetsResult] = deriveEncoder
 }
 
 trait TwitterExceptionJsonCodec {

@@ -5,12 +5,12 @@ import scala.concurrent.duration._
 import scala.concurrent.Future
 import scala.collection.immutable._
 
-import edu.jproyo.dojos.twitter.api.TweetsResult
+import edu.jproyo.dojos.twitter.api.TweetSimpl
 import edu.jproyo.dojos.twitter.api.adapter.Adapter
 
 trait TwitterService {
   val adapter: Adapter
-  def tweetsFor(username: String): Future[List[String]]
+  def tweetsFor(username: String): Future[List[TweetSimpl]]
 }
 
 object TwitterService{
@@ -24,7 +24,7 @@ object TwitterService{
     val adapter = TwitterAdapter
     implicit val scalaCache = ScalaCache(GuavaCache())
 
-    def tweetsFor(username: String): Future[List[String]] = {
+    def tweetsFor(username: String): Future[List[TweetSimpl]] = {
       cachingWithTTL(username)(30 seconds) {
         adapter.tweetsFor(username)
       }
