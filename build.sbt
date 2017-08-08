@@ -29,18 +29,25 @@ lazy val others = Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
 )
 
+lazy val testing = Seq(
+  "org.scalatest" %% "scalatest" % "3.0.1" % "it,test"
+)
+
 lazy val dependencies = Seq(
-	libraryDependencies ++= akka ++ circle ++ others
+	libraryDependencies ++= akka ++ circle ++ others ++ testing
 )
 
 scalacOptions += "-feature"
 
+
 lazy val mainClassName = "edu.jproyo.dojos.twitter.api.WebApp"
 
-lazy val root = (project in file(".")).
-  settings(commonSettings: _*).
-  settings(dependencies: _*).
-  settings(
+lazy val root = (project in file("."))
+  .configs(IntegrationTest)
+  .settings(commonSettings: _*)
+  .settings(dependencies: _*)
+  .settings(Defaults.itSettings)
+  .settings(
   	mainClass in Compile := Some(mainClassName)
   )
   packAutoSettings ++ Seq(
