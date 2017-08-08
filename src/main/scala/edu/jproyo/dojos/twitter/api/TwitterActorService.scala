@@ -14,8 +14,9 @@ import com.typesafe.scalalogging.Logger
 import io.circe.syntax._
 
 import edu.jproyo.dojos.twitter.api.config._
+import edu.jproyo.dojos.twitter.api.service._
 
-class TwitterActorService extends Actor with TwitterResultJsonCodec{
+class TwitterActorService(implicit twitterService: TwitterService) extends Actor with TwitterResultJsonCodec{
 
 	val logger = Logger[TwitterActorService]
 
@@ -36,7 +37,7 @@ class TwitterActorService extends Actor with TwitterResultJsonCodec{
 			// val received = (producerActor ? Message.queue(newMessage, "test-queue")).mapTo[ConfirmResponse]
 			// val result = Await.result(received, timeout.duration)
 			logger.info(s"Tweets for user $username")
-			sender ! TweetsResult(username,List("one", "two", "three"))
+			sender ! twitterService.tweetsFor(username)
 		}
 
 	}

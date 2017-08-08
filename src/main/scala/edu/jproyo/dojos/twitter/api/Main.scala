@@ -21,7 +21,7 @@ object WebApp extends MainController with TwitterResultJsonCodec{
 
   implicit val system = ActorSystem("twitter-api-system")
 
-  val serviceProxyApi = system.actorOf(RoundRobinPool(10).props(Props[TwitterActorService]), name = "twitter-proxy-service")
+  val serviceProxyApi = system.actorOf(RoundRobinPool(10).props(Props(new TwitterActorService)), name = "twitter-proxy-service")
 
   def main(args: Array[String]) {
 
