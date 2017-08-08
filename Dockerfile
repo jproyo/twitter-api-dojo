@@ -5,7 +5,8 @@ MAINTAINER Juan Pablo Royo <juanpablo.royo@gmail.com>
 WORKDIR /opt/twitter-api
 
 ADD . /opt/twitter-api/
+RUN sbt pack
 
 EXPOSE 8080
 
-CMD ["sbt", "run"]
+CMD ["./target/pack/bin/twitter-api"]
