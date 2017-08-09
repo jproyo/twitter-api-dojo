@@ -9,7 +9,9 @@ import com.danielasfregola.twitter4s.entities.Tweet
 
 import edu.jproyo.dojos.twitter.api.TweetSimpl
 
-trait Adapter
+trait Adapter {
+  def tweetsFor(username: String): Future[List[TweetSimpl]]
+}
 
 object TwitterAdapter extends Adapter{
 
