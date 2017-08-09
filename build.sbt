@@ -42,7 +42,8 @@ lazy val others = Seq(
 
 lazy val testing = Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % "it,test",
-  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.9" % "it,test"
+  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.9" % "it,test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "it,test"
 )
 
 lazy val dependencies = Seq(

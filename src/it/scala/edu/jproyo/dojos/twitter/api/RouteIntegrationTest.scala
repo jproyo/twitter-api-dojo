@@ -1,6 +1,6 @@
 package edu.jproyo.dojos.twitter.api
 
-import org.scalatest.{ Matchers, WordSpec, BeforeAndAfterAll }
+import org.scalatest.{ Matchers, WordSpec, BeforeAndAfterAll, ParallelTestExecution }
 import akka.actor.{ActorSystem, Actor, Props}
 import akka.testkit.{ ImplicitSender, TestActors, TestKit }
 import akka.http.scaladsl.model._
@@ -14,7 +14,7 @@ import com.danielasfregola.twitter4s.exceptions._
 
 import edu.jproyo.dojos.twitter.api.config._
 
-class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfterAll with MainController {
+class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfterAll with ParallelTestExecution with MainController {
 
   override def afterAll {
     TestKit.shutdownActorSystem(system)
@@ -23,14 +23,14 @@ class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTes
   class TwitterProxyApiMock extends Actor {
     def receive = {
       case msg: String if msg.endsWith("invalid") => sender ! akka.actor.Status.Failure(new TwitterException(NotFound, Errors(TwitterError("not found", 404))))
-      case msg: String if msg.endsWith("valid") => sender ! akka.actor.Status.Success(TweetsResult(msg, List("one")))
+      case msg: String if msg.endsWith("valid") => sender ! akka.actor.Status.Success(TweetsResult(msg, List(TweetSimpl("12/12/2012", "one"))))
       case _           => None
     }
   }
 
   val serviceProxyApi = system.actorOf(Props(new TwitterProxyApiMock))
 
-  "API Endpoin" should {
+  "API Endpoint" should {
 
     "return HTML documentation on root path" in {
       Get() ~> mainRoute ~> check {
@@ -61,7 +61,7 @@ class RouteIntegrationTest extends WordSpec with Matchers with ScalatestRouteTes
     "response username TweetsResult on /twitter/api/{username}/tweets" in {
       Get("/twitter/api/someuservalid/tweets") ~> mainRoute ~> check {
         status shouldEqual StatusCodes.OK
-        entityAs[TweetsResult] shouldEqual TweetsResult("someuservalid", List("one"))
+        entityAs[TweetsResult] shouldEqual TweetsResult("someuservalid", List(TweetSimpl("12/12/2012", "one")))
       }
     }
 

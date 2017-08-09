@@ -17,9 +17,9 @@ import io.circe.syntax._
 import edu.jproyo.dojos.twitter.api.config._
 import edu.jproyo.dojos.twitter.api.service._
 
-class TwitterActorService(implicit twitterService: TwitterService) extends Actor with TwitterResultJsonCodec{
+class DelegatorActor(implicit service: TwitterService) extends Actor with TwitterResultJsonCodec{
 
-	val logger = Logger[TwitterActorService]
+	val logger = Logger[DelegatorActor]
 
 	implicit val timeout = Timeout(Configuration().serviceTimeout)
 
@@ -35,7 +35,7 @@ class TwitterActorService(implicit twitterService: TwitterService) extends Actor
 
 		case username: String => {
 			logger.info(s"Tweets for user $username")
-			twitterService.tweetsFor(username).map(TweetsResult(username,_)) pipeTo sender
+			service.tweetsFor(username).map(TweetsResult(username,_)) pipeTo sender
 		}
 
 	}
