@@ -51,3 +51,7 @@ Although the Architecture is not 100% hexagonal, Adapter layer was thought with 
 I have used a mixed between TDD approach and top down development. I have started working with **RouteIntegrationTest** as my entry point to the application thinking from the user's side and not from the implementation one.
 
 After filling some gaps i started to build implementations and complete unit and integration testing.
+
+## Time for solution completion
+
+14 hours ETA
