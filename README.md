@@ -1,5 +1,9 @@
 # Twitter Proxy API
 
+## Design Notes
+
+Design Notes [could be found here](./DESIGN.md)
+
 ## Requirements
 
 We need a small REST API with just one endpoint that, given a Twitter username, returns the user’s last 10 tweets, in JSON format.
