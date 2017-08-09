@@ -7,3 +7,4 @@ target/
 *.glue
 project/target
 project/project/target
+keys.store
