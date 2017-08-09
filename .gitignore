@@ -6,3 +6,4 @@ target/
 .cache*
 *.glue
 project/target
+project/project/target
