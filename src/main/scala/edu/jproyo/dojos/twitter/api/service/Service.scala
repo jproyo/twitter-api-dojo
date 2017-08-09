@@ -6,6 +6,7 @@ import scala.concurrent.Future
 import scala.collection.immutable._
 
 import edu.jproyo.dojos.twitter.api.TweetSimpl
+import edu.jproyo.dojos.twitter.api.config._
 
 trait TwitterService {
   def tweetsFor(username: String): Future[List[TweetSimpl]]
@@ -23,7 +24,7 @@ object TwitterService{
     lazy val twitter = TwitterAdapter
 
     def tweetsFor(username: String): Future[List[TweetSimpl]] = {
-      cachingWithTTL(username)(30 seconds) {
+      cachingWithTTL(username)(Configuration().cacheTweetsByUserTTL) {
         twitter.tweetsFor(username)
       }
     }

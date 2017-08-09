@@ -8,7 +8,7 @@ import com.typesafe.config.Config
 import configs.Configs
 import configs.syntax._
 
-case class TwitterApiConfig(serviceTimeout: FiniteDuration = 5 seconds)
+case class TwitterApiConfig(val serviceTimeout: FiniteDuration = 5 seconds, val cacheTweetsByUserTTL: FiniteDuration = 30 seconds)
 
 object Configuration {
 
