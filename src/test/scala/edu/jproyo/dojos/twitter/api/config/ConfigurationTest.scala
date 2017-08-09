@@ -9,8 +9,9 @@ class ConfigurationTest extends WordSpec with Matchers {
 
   "Configuration" when {
     "has correctvalues" should {
-      "return 1 second configured on test resources application.conf" in {
+      "return configured on test resources application.conf" in {
         Configuration().serviceTimeout shouldEqual (1 seconds)
+        Configuration().cacheTweetsByUserTTL shouldEqual (2 seconds)
       }
     }
     "default values" should {
