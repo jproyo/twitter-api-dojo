@@ -1,5 +1,7 @@
 # Twitter Proxy API
 
+[![Build Status](https://travis-ci.org/jproyo/twitter-api-dojo.svg?branch=master)](https://travis-ci.org/jproyo/twitter-api-dojo.svg?branch=master)
+
 ## Design Notes
 
 Design Notes [could be found here](./DESIGN.md)
