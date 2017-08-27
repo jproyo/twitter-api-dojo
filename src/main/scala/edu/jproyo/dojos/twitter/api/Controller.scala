@@ -19,7 +19,6 @@ import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import io.circe.syntax._
 import com.danielasfregola.twitter4s.exceptions.TwitterException
 
-import edu.jproyo.dojos.twitter.api.config._
 
 trait MainController extends Directives with FailFastCirceSupport with TwitterResultJsonCodec with TwitterExceptionJsonCodec{
 
@@ -27,7 +26,8 @@ trait MainController extends Directives with FailFastCirceSupport with TwitterRe
 
   val serviceProxyApi: ActorRef
 
-  implicit val timeout: Timeout = Timeout(Configuration().serviceTimeout)
+  import config._
+  implicit val timeout: Timeout = Timeout(config().serviceTimeout)
 
   val twitterExceptionHandler = ExceptionHandler {
     case e: TwitterException =>

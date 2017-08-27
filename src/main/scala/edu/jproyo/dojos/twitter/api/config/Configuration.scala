@@ -10,7 +10,7 @@ import configs.syntax._
 
 case class TwitterApiConfig(val serviceTimeout: FiniteDuration = 5 seconds, val cacheTweetsByUserTTL: FiniteDuration = 30 seconds)
 
-object Configuration {
+object config {
 
   def apply(configStr: Option[String] = None): TwitterApiConfig = {
     configStr.fold(ConfigFactory.load())(ConfigFactory.parseString(_)).getOrElse[TwitterApiConfig]("twitter-app", TwitterApiConfig()).value

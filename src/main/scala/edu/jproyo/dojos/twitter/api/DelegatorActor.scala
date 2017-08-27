@@ -14,14 +14,14 @@ import com.typesafe.scalalogging.Logger
 
 import io.circe.syntax._
 
-import edu.jproyo.dojos.twitter.api.config._
 import edu.jproyo.dojos.twitter.api.service._
 
 class DelegatorActor(implicit service: TwitterService) extends Actor with TwitterResultJsonCodec{
 
 	val logger = Logger[DelegatorActor]
 
-	implicit val timeout = Timeout(Configuration().serviceTimeout)
+	import config._
+	implicit val timeout = Timeout(config().serviceTimeout)
 
 	override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy(maxNrOfRetries = 3) {
       case e: Exception =>

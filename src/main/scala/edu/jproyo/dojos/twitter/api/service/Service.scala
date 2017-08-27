@@ -24,7 +24,7 @@ object TwitterService{
     lazy val twitter = TwitterAdapter
 
     def tweetsFor(username: String): Future[List[TweetSimpl]] = {
-      cachingWithTTL(username)(Configuration().cacheTweetsByUserTTL) {
+      cachingWithTTL(username)(config().cacheTweetsByUserTTL) {
         twitter.tweetsFor(username)
       }
     }
