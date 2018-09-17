@@ -55,7 +55,7 @@ coverageEnabled := true
 
 lazy val mainClassName = "edu.jproyo.dojos.twitter.api.WebApp"
 
-lazy val root = (project in file("."))
+lazy val twitterApi = (project in file("."))
   .configs(IntegrationTest)
   .settings(commonSettings: _*)
   .settings(dependencies: _*)

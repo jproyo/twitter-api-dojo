@@ -1,7 +1,5 @@
+.idea/
 bin/
-.project
-.settings
-.classpath
 target/
 .cache*
 *.glue
