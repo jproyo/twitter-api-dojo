@@ -8,14 +8,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor._
 import akka.routing.RoundRobinPool
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 
 import com.typesafe.scalalogging.Logger
-
-import io.circe.syntax._
-import io.circe.parser.decode
 
 object WebApp extends MainController with TwitterResultJsonCodec{
 

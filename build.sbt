@@ -6,7 +6,7 @@ lazy val commonSettings = Seq(
   organization := "edu.jproyo.dojos",
   name := projectName,
   version := "0.0.1-SNAPSHOT",
-  scalaVersion := "2.12.2"
+  scalaVersion := "2.12.6"
 )
 
 val circeVersion = "0.8.0"
@@ -16,6 +16,11 @@ lazy val circle = Seq(
   "io.circe" %% "circe-generic",
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
+
+lazy val scalaz = Seq(
+  "org.scalaz" %% "scalaz-core" % "7.2.26",
+  "org.scalaz" %% "scalaz-zio" % "0.2.7"
+)
 
 lazy val akka = Seq(
 	"com.typesafe.akka" %% "akka-actor" % "2.4.19",
@@ -47,8 +52,10 @@ lazy val testing = Seq(
 )
 
 lazy val dependencies = Seq(
-	libraryDependencies ++= akka ++ circle ++ twitter ++ others ++ testing
+	libraryDependencies ++= akka ++ circle ++ scalaz ++ twitter ++ others ++ testing
 )
+
+addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.7")
 
 scalacOptions += "-feature"
 coverageEnabled := true
@@ -64,11 +71,16 @@ lazy val twitterApi = (project in file("."))
   	mainClass in Compile := Some(mainClassName)
   )
 
-  packAutoSettings ++ Seq(
-    packMain := Map(projectName -> mainClassName),
-    packJvmOpts := Map(projectName -> Seq("-Xmx2048m")),
-    packGenerateWindowsBatFile := false,
-    packJarNameConvention := "default",
-    packExpandedClasspath := false,
-    packResourceDir += (baseDirectory.value / "web" -> "web-content")
-  )
+  enablePlugins(PackPlugin)
+
+  packMain := Map(projectName -> mainClassName)
+
+  packJvmOpts := Map(projectName -> Seq("-Xmx2048m"))
+
+  packGenerateWindowsBatFile := false
+
+  packJarNameConvention := "default"
+
+  packExpandedClasspath := false
+
+  packResourceDir += (baseDirectory.value / "web" -> "web-content")
