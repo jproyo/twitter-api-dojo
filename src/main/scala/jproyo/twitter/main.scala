@@ -1,18 +1,14 @@
 package jproyo.twitter
 
-import logic.program._
-import scalaz.zio._
+import logic._
+import scalaz.Id._
 
-object Main extends App {
+object MyApp extends App {
 
-  override def main(args: Array[String]): Unit = {
+  import derivation.TimeLineIO._
 
-    import derivation.TimeLineIO._
+  val module = new TwitterModule[Id](timeLineWithTwitterLib, cacheWithGuava)
+  module.userTimeLine("juanpabloroyo").toList.foreach(println(_))
 
-    for {
-      result <- userTimeLine("juanpabloroyo")
-      _ <- println(result)
-    } yield ()
-  }
 
 }

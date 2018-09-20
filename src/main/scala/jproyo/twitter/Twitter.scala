@@ -5,17 +5,22 @@ package logic
 import scala.language.higherKinds
 import algebra._
 import scalaz._
+import scalaz.syntax.bind._
 
-package object program {
+trait Twitter[F[_]]{
+  def userTimeLine(username: String): F[IList[UserTimeLine]]
+}
 
+final class TwitterModule[F[_]: Monad](T: TimeLine[F], C: CacheTL[F])
+  extends Twitter[F] {
 
-  def userTimeLine[F[_]: Monad: TimeLine: CacheTL](username: String): F[IList[UserTimeLine]] =
-    OptionT(CacheTL.get(username)).getOrElseF(fromTwitter(username))
+  def userTimeLine(username: String): F[IList[UserTimeLine]] =
+    OptionT(C.get(username)).getOrElseF(fromTwitter(username))
 
-  private def fromTwitter[F[_]: Monad: TimeLine: CacheTL](username: String): F[IList[UserTimeLine]] =
+  private def fromTwitter(username: String): F[IList[UserTimeLine]] =
     for{
-      result <- TimeLine.get(username)
-      _      <- CacheTL.set(username, result)
+      result <- T.get(username)
+      _      <- C.set(username, result)
     } yield result
 
 }
