@@ -12,7 +12,7 @@ trait Adapter {
 
 object TwitterAdapter extends Adapter{
 
-  lazy val restClient = TwitterRestClient(ConsumerToken("z1M5MjcLwrc2FUyFe0aTPmnpd", "qa9Qis0VNtthW9E8OGUzkttuWu6dOvMoUOJ8NvRfwlL1xjxso5"), AccessToken("75272994-eq6KgSTAijzhwATBrxGv2TeiaR6kLqhSUMlmki2B7", "TIC7h7N7r0X9ekU7Qq3FSCmXjB11TSigtxPunQcGyenjn"))
+  lazy val restClient = TwitterRestClient()
 
   def tweetsFor(username: String): Future[List[TweetSimpl]] = {
      _tweets(username).map{ rated => rated.data.map(r => TweetSimpl(r.created_at.toString,r.text)).toList }
